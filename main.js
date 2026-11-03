@@ -85,6 +85,7 @@ console.log("Array barajado (Fisher-Yates):", shuffledPokemon);
  * @param {string|number} pokemonId - Nombre o ID del Pokémon
  * @returns {Object|null} Objeto con el nombre y la URL del sprite o null si hay error
  */
+
 async function fetchPokemonData(pokemonId) {
   try {
     const response = await fetch(
@@ -106,7 +107,6 @@ async function fetchPokemonData(pokemonId) {
     return null;
   }
 }
-
 // Prueba de carga asíncrona de un Pokémon específico
 async function testApiConnection() {
   console.log("[PokéMatch Pro] Consultando la PokéAPI...");
@@ -117,3 +117,57 @@ async function testApiConnection() {
 }
 
 testApiConnection();
+
+async function fetchPokemonData() {
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=10`);
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.table(data.results);
+
+    return data.results.map((pokemon) => ({
+      name: pokemon.name,
+      url: pokemon.url,
+    }));
+  } catch (error) {
+    console.error("No se pudo recuperar el Pokémon:", error);
+    return null;
+  }
+}
+
+async function fetchPokemonImages(urlPokemon) {
+  try {
+    const response = await fetch(urlPokemon);
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+    const data = await response.json();
+    return {
+      name: data.name,
+      image: data.sprites.front_default,
+    };
+  } catch (error) {
+    console.error("No se pudo recuperar la imagen del Pokémon:", error);
+    return null;
+  }
+}
+
+async function testObtenerPokemones() {
+  console.log(
+    "[PokéMatch Pro] Consultando la PokéAPI para obtener varios Pokémon...",
+  );
+  const pokemons = await fetchPokemonData();
+  console.log("Pokémon obtenidos con éxito:", pokemons);
+  for (const pokemon of pokemons) {
+    const pokemonData = await fetchPokemonImages(pokemon.url);
+    console.log("Datos del Pokémon:", pokemonData);
+  }
+}
+
+testObtenerPokemones();

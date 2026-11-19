@@ -21,8 +21,6 @@ function updateBoardUI() {
 updateBoardUI();
 
 // 3. Temporizador por Consola
-let secondsElapsed = 0;
-let timerInterval = null;
 
 function startConsoleTimer() {
   console.log("[PokéMatch Pro] Iniciando temporizador por consola...");
@@ -171,3 +169,10 @@ async function testObtenerPokemones() {
 }
 
 testObtenerPokemones();
+
+// Selección del elemento DOM del cronómetro
+const timerElement = document.getElementById("timer");
+
+let secondsElapsed = 0;
+let timerInterval = null;
+let timerRunning = false;
